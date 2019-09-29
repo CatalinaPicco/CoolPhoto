@@ -1,8 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.coolphoto.MainActivity">
     <item
-        android:id="@+id/miCompose"
+        android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
         android:title="@string/search"
-        app:showAsAction="ifRoom"></item>
+        app:showAsAction="ifRoom"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 </menu>

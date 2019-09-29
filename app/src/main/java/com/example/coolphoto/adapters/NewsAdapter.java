@@ -1,6 +1,7 @@
 package com.example.coolphoto.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,16 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> implements Filterable {
 
     Context context;
-    ArrayList<Album> albums;
-    ArrayList<Album> contactListFiltered;
+    List<Album> albums;
+    List<Album> contactListFiltered;
+    AlbumAdapterListener listener;
 
-    public NewsAdapter(Context context, ArrayList<Album> articles) {
+
+    public NewsAdapter(Context context, List<Album> albums, AlbumAdapterListener listener) {
         this.context = context;
-        this.albums = articles;
+        this.listener = listener;
+        this.albums = albums;
+        this.contactListFiltered = albums;
     }
 
     @NonNull
@@ -37,51 +42,55 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NewsAdapter.NewsViewHolder holder, int position) {
-        String ids = String.valueOf(albums.get(position).id);
+    public void onBindViewHolder(@NonNull NewsAdapter.NewsViewHolder holder,final int position) {
+        final Album album = contactListFiltered.get(position);
+        String ids = String.valueOf(album.id);
         holder.tvName.setText(ids);
-        holder.tvDesCription.setText(albums.get(position).title);
+        holder.tvDesCription.setText(album.title);
     }
 
     @Override
     public int getItemCount() {
-        return albums.size();
+        return contactListFiltered.size();
     }
 
     @Override
     public Filter getFilter() {
-            return new Filter() {
-                @Override
-                protected FilterResults performFiltering(CharSequence charSequence) {
-                    String charString = charSequence.toString();
-                    if (charString.isEmpty()) {
-                        contactListFiltered = albums;
-                    } else {
-                        List<Album> filteredList = new ArrayList<>();
-                        for (Album row : albums) {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    contactListFiltered = albums;
+                } else {
+                    List<Album> filteredList = new ArrayList<>();
+                    for (Album row : albums) {
 
-                            // name match condition. this might differ depending on your requirement
-                            // here we are looking for name or phone number match
-                            if (row.title.toLowerCase().contains(charString.toLowerCase())) {
-                                filteredList.add(row);
-                            }
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.getTitle().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(row);
                         }
-
-                        albums = (ArrayList<Album>) filteredList;
                     }
 
-                    FilterResults filterResults = new FilterResults();
-                    filterResults.values = albums;
-                    return filterResults;
+                    contactListFiltered = filteredList;
                 }
 
-                @Override
-                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                   albums = (ArrayList<Album>) filterResults.values;
-                   notifyDataSetChanged();
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = contactListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                contactListFiltered = (ArrayList<Album>) filterResults.values;
+                for (Album row : contactListFiltered){
+                    Log.e("filtro:", row.title);
                 }
-            };
-        }
+                notifyDataSetChanged();
+            }
+        };
+    }
 
     public class NewsViewHolder extends RecyclerView.ViewHolder{
 
@@ -93,8 +102,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
             tvName = itemView.findViewById(R.id.tvName);
             tvDesCription = itemView.findViewById(R.id.tvDescription);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onAlbumSelected(contactListFiltered.get(getAdapterPosition()));
+                }
+            });
         }
     }
 
+
+    public interface AlbumAdapterListener {
+        void onAlbumSelected(Album album);
+    }
 
 }
