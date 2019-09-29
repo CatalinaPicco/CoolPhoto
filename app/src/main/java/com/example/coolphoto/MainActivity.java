@@ -1,30 +1,71 @@
 package com.example.coolphoto;
 
 import android.os.Bundle;
+import android.view.Menu;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import com.example.coolphoto.adapters.NewsAdapter;
+import com.example.coolphoto.models.Album;
+import com.example.coolphoto.viewmodels.NewsViewModel;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    ArrayList<Album> albums = new ArrayList<>();
+    NewsAdapter newsAdapter;
+    RecyclerView rvHeadline;
+    NewsViewModel newsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        setContentView(R.layout.fragment_home);
+
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
+        rvHeadline = findViewById(R.id.rvNews);
+        newsViewModel =
+                ViewModelProviders.of(this).get(NewsViewModel.class);
+        newsViewModel.init();
+        newsViewModel.getNewsRepository().observe(this, new Observer<List<Album>>() {
+            @Override
+            public void onChanged(List<Album> newsResponse) {
+                List<Album> newsArticles = newsResponse;
+                albums.addAll(newsArticles);
+                newsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        setupRecyclerView();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    private void setupRecyclerView() {
+        if (newsAdapter == null) {
+            newsAdapter = new NewsAdapter(this, albums);
+            rvHeadline.setLayoutManager(new LinearLayoutManager(this));
+            rvHeadline.setAdapter(newsAdapter);
+            rvHeadline.setItemAnimator(new DefaultItemAnimator());
+            rvHeadline.setNestedScrollingEnabled(true);
+        } else {
+            newsAdapter.notifyDataSetChanged();
+        }
     }
 
 }
