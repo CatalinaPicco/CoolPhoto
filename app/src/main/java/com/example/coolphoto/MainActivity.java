@@ -1,20 +1,20 @@
 package com.example.coolphoto;
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.coolphoto.adapters.NewsAdapter;
 import com.example.coolphoto.models.Album;
+import com.example.coolphoto.networking.PhotosRepository;
 import com.example.coolphoto.viewmodels.NewsViewModel;
+import com.example.coolphoto.viewmodels.PhotosViewModel;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -26,6 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NewsAdapter.AlbumAdapterListener{
 
+    private static final String EXTRA_MESSAGE = null;
     List<Album> albums;
     NewsAdapter newsAdapter;
     RecyclerView rvHeadline;
@@ -119,5 +120,8 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
     @Override
     public void onAlbumSelected(Album album) {
         Toast.makeText(getApplicationContext(), "Selected: " + album.getTitle(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, PhotoActivity.class);
+        intent.putExtra("EXTRA_ID", album.getId());
+        startActivity(intent);
     }
 }
