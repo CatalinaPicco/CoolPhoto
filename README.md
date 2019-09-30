@@ -7,13 +7,13 @@ This is a test app for RL
 Use this [link](https://github.com/CatalinaPicco/redLink.git) to clone the project or download apk from this [link](https://testlink).
 
 ```bash
-git clone https://...
+git clone https://github.com/CatalinaPicco/CoolPhoto.git
 ```
 
 ## Usage
 
 ```bash
-git clone https://...
+gradlew installDemoDebug 
 ```
 
 ## Contributing
