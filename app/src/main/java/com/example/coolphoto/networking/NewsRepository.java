@@ -1,5 +1,8 @@
 package com.example.coolphoto.networking;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.coolphoto.models.Album;
@@ -11,6 +14,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class NewsRepository {
+
     private static NewsRepository newsRepository;
 
     public static NewsRepository getInstance(){
@@ -40,6 +44,7 @@ public class NewsRepository {
             @Override
             public void onFailure(Call<List<Album>> call, Throwable t) {
                 newsData.setValue(null);
+
             }
         });
         return newsData;

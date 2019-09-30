@@ -32,8 +32,8 @@
             android:id="@+id/tvIdPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="id"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
             android:textSize="12sp"
@@ -47,18 +47,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
             android:gravity="right|end"
-            android:text="prueba"
+            android:maxLines="2"
+            android:minLines="2"
             android:textAllCaps="true"
-            android:textColor="@android:color/holo_blue_light"
+            android:textColor="@color/colorTitle"
             android:textSize="15sp"
             android:textStyle="italic"
-            android:maxLines="2"
-            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_photo"
-            app:layout_constraintTop_toBottomOf="@+id/tvIdPhoto" />
+            app:layout_constraintStart_toEndOf="@+id/iv_photo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

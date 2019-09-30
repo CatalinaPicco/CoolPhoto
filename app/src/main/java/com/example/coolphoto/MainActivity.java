@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.coolphoto.adapters.NewsAdapter;
@@ -11,6 +13,7 @@ import com.example.coolphoto.models.Album;
 import com.example.coolphoto.networking.PhotosRepository;
 import com.example.coolphoto.viewmodels.NewsViewModel;
 import com.example.coolphoto.viewmodels.PhotosViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
     RecyclerView rvHeadline;
     NewsViewModel newsViewModel;
     SearchView searchView;
+    LinearLayout noInternet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
         setSupportActionBar(myToolbar);
 
         rvHeadline = findViewById(R.id.rvNews);
+        noInternet = findViewById(R.id.ll_no_internet);
         albums = new ArrayList<>();
         newsViewModel =
                 ViewModelProviders.of(this).get(NewsViewModel.class);
@@ -49,10 +54,15 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
         newsViewModel.getNewsRepository().observe(this, new Observer<List<Album>>() {
             @Override
             public void onChanged(List<Album> newsResponse) {
-                List<Album> newsArticles = newsResponse;
-                albums.clear();
-                albums.addAll(newsArticles);
-                newsAdapter.notifyDataSetChanged();
+                if (newsResponse != null){
+                    List<Album> newsArticles = newsResponse;
+                    albums.clear();
+                    albums.addAll(newsArticles);
+                    newsAdapter.notifyDataSetChanged();
+                } else {
+                    rvHeadline.setVisibility(View.GONE);
+                    noInternet.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -119,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
 
     @Override
     public void onAlbumSelected(Album album) {
-        Toast.makeText(getApplicationContext(), "Selected: " + album.getTitle(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Selección: " + album.getId(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, PhotoActivity.class);
         intent.putExtra("EXTRA_ID", album.getId());
         startActivity(intent);

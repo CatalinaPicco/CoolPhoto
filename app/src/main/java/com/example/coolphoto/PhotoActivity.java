@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,15 +35,27 @@ public class PhotoActivity extends AppCompatActivity {
     PhotosAdapter photosAdapter;
     RecyclerView rvHeadline;
     PhotosViewModel photosViewModel;
+    LinearLayout noInternet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_home);
         int sessionId = getIntent().getIntExtra("EXTRA_ID", 0);
+        noInternet = findViewById(R.id.ll_no_internet);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        myToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         rvHeadline = findViewById(R.id.rvNews);
         photos = new ArrayList<>();
@@ -52,9 +66,14 @@ public class PhotoActivity extends AppCompatActivity {
         photosViewModel.getPhotoRepository().observe(this, new Observer<List<PhotoItem>>() {
             @Override
             public void onChanged(List<PhotoItem> photosResponse) {
-                List<PhotoItem> photosList = photosResponse;
-                photos.addAll(photosList);
-                photosAdapter.notifyDataSetChanged();
+                if (photosResponse != null) {
+                    List<PhotoItem> photosList = photosResponse;
+                    photos.addAll(photosList);
+                    photosAdapter.notifyDataSetChanged();
+                } else {
+                    rvHeadline.setVisibility(View.GONE);
+                    noInternet.setVisibility(View.VISIBLE);
+                }
             }
         });
 
