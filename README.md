@@ -1,5 +1,7 @@
 # CoolPhoto
 
+![ic_launcher](https://user-images.githubusercontent.com/25269706/65884796-d96a2d00-e36f-11e9-9da8-914ea0e8f203.png)
+
 This is a test app for RL
 
 ## Installation
