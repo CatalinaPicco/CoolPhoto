@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> implements Filterable {
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.NewsViewHolder> implements Filterable {
 
     Context context;
     List<Album> albums;
@@ -27,7 +27,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     AlbumAdapterListener listener;
 
 
-    public NewsAdapter(Context context, List<Album> albums, AlbumAdapterListener listener) {
+    public AlbumAdapter(Context context, List<Album> albums, AlbumAdapterListener listener) {
         this.context = context;
         this.listener = listener;
         this.albums = albums;
@@ -36,13 +36,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     @NonNull
     @Override
-    public NewsAdapter.NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AlbumAdapter.NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.album_item, parent, false);
         return new  NewsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NewsAdapter.NewsViewHolder holder,final int position) {
+    public void onBindViewHolder(@NonNull AlbumAdapter.NewsViewHolder holder, final int position) {
         final Album album = contactListFiltered.get(position);
         String ids = String.valueOf(album.id);
         holder.tvName.setText(ids);

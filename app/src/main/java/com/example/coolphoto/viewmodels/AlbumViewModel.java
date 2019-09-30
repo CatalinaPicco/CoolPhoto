@@ -5,25 +5,25 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.coolphoto.models.Album;
-import com.example.coolphoto.networking.NewsRepository;
+import com.example.coolphoto.networking.AlbumRepository;
 
 import java.util.List;
 
-public class NewsViewModel extends ViewModel {
+public class AlbumViewModel extends ViewModel {
 
     private MutableLiveData<List<Album>> mutableLiveData;
-    private NewsRepository newsRepository;
+    private AlbumRepository albumRepository;
 
     public void init(){
         if (mutableLiveData != null){
             return;
         }
-        newsRepository = NewsRepository.getInstance();
-        mutableLiveData = newsRepository.getNews();
+        albumRepository = AlbumRepository.getInstance();
+        mutableLiveData = albumRepository.getNews();
 
     }
 
-    public LiveData<List<Album>> getNewsRepository() {
+    public LiveData<List<Album>> getAlbumRepository() {
         return mutableLiveData;
     }
 

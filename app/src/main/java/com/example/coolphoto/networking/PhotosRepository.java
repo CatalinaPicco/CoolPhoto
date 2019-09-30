@@ -22,10 +22,10 @@ public class PhotosRepository {
         return photosRepository;
     }
 
-    private INewsApi newsApi;
+    private IServicesApi newsApi;
 
     public PhotosRepository(){
-        newsApi = RetrofitService.createService(INewsApi.class);
+        newsApi = RetrofitService.createService(IServicesApi.class);
     }
 
     public MutableLiveData<List<PhotoItem>> getPhotos(int id){

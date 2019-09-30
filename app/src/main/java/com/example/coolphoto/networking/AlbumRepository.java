@@ -1,8 +1,5 @@
 package com.example.coolphoto.networking;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.coolphoto.models.Album;
@@ -13,21 +10,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NewsRepository {
+public class AlbumRepository {
 
-    private static NewsRepository newsRepository;
+    private static AlbumRepository albumRepository;
 
-    public static NewsRepository getInstance(){
-        if (newsRepository == null){
-            newsRepository = new NewsRepository();
+    public static AlbumRepository getInstance(){
+        if (albumRepository == null){
+            albumRepository = new AlbumRepository();
         }
-        return newsRepository;
+        return albumRepository;
     }
 
-    private INewsApi newsApi;
+    private IServicesApi newsApi;
 
-    public NewsRepository(){
-        newsApi = RetrofitService.createService(INewsApi.class);
+    public AlbumRepository(){
+        newsApi = RetrofitService.createService(IServicesApi.class);
     }
 
     public MutableLiveData<List<Album>> getNews(){

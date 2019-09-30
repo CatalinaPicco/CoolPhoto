@@ -1,4 +1,4 @@
-package com.example.coolphoto;
+package com.example.coolphoto.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +8,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.coolphoto.adapters.NewsAdapter;
+import com.example.coolphoto.R;
+import com.example.coolphoto.adapters.AlbumAdapter;
 import com.example.coolphoto.models.Album;
-import com.example.coolphoto.networking.PhotosRepository;
-import com.example.coolphoto.viewmodels.NewsViewModel;
-import com.example.coolphoto.viewmodels.PhotosViewModel;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.coolphoto.viewmodels.AlbumViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -27,20 +25,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements NewsAdapter.AlbumAdapterListener{
+public class MainActivity extends AppCompatActivity implements AlbumAdapter.AlbumAdapterListener{
 
     private static final String EXTRA_MESSAGE = null;
     List<Album> albums;
-    NewsAdapter newsAdapter;
+    AlbumAdapter albumAdapter;
     RecyclerView rvHeadline;
-    NewsViewModel newsViewModel;
+    AlbumViewModel albumViewModel;
     SearchView searchView;
     LinearLayout noInternet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_home);
+        setContentView(R.layout.activity_base);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -48,17 +46,17 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
         rvHeadline = findViewById(R.id.rvNews);
         noInternet = findViewById(R.id.ll_no_internet);
         albums = new ArrayList<>();
-        newsViewModel =
-                ViewModelProviders.of(this).get(NewsViewModel.class);
-        newsViewModel.init();
-        newsViewModel.getNewsRepository().observe(this, new Observer<List<Album>>() {
+        albumViewModel =
+                ViewModelProviders.of(this).get(AlbumViewModel.class);
+        albumViewModel.init();
+        albumViewModel.getAlbumRepository().observe(this, new Observer<List<Album>>() {
             @Override
             public void onChanged(List<Album> newsResponse) {
                 if (newsResponse != null){
                     List<Album> newsArticles = newsResponse;
                     albums.clear();
                     albums.addAll(newsArticles);
-                    newsAdapter.notifyDataSetChanged();
+                    albumAdapter.notifyDataSetChanged();
                 } else {
                     rvHeadline.setVisibility(View.GONE);
                     noInternet.setVisibility(View.VISIBLE);
@@ -83,15 +81,15 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                newsAdapter.getFilter().filter(query);
-                newsAdapter.notifyDataSetChanged();
+                albumAdapter.getFilter().filter(query);
+                albumAdapter.notifyDataSetChanged();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                newsAdapter.getFilter().filter(newText);
-                newsAdapter.notifyDataSetChanged();
+                albumAdapter.getFilter().filter(newText);
+                albumAdapter.notifyDataSetChanged();
                 //Toast.makeText(MainActivity.this, "searching" + newText, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -116,14 +114,14 @@ public class MainActivity extends AppCompatActivity implements NewsAdapter.Album
     }
 
     private void setupRecyclerView() {
-        if (newsAdapter == null) {
-            newsAdapter = new NewsAdapter(this, albums, this);
+        if (albumAdapter == null) {
+            albumAdapter = new AlbumAdapter(this, albums, this);
             rvHeadline.setLayoutManager(new LinearLayoutManager(this));
-            rvHeadline.setAdapter(newsAdapter);
+            rvHeadline.setAdapter(albumAdapter);
             rvHeadline.setItemAnimator(new DefaultItemAnimator());
             rvHeadline.setNestedScrollingEnabled(true);
         } else {
-            newsAdapter.notifyDataSetChanged();
+            albumAdapter.notifyDataSetChanged();
         }
     }
 
